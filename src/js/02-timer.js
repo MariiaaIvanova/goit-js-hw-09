@@ -11,23 +11,26 @@ const hoursOutput = document.querySelector('[data-hours]');
 const minutesOutput = document.querySelector('[data-minutes]');
 const secondsOutput = document.querySelector('[data-seconds]');
 
-let intervalId = null;
-dataStartBtn.disabled = 'disabled';
+let intervalId;
+let date;
+dataStartBtn.disabled = true;
 
 const options = {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-      console.log(selectedDates[0]);
-      if (this.selectedDates[0] > Date.now()) {
-        dataStartBtn.disabled = null
-      } else {
-        return Notiflix.Notify.failure('Please choose a date in the future');
-      }
-    },
-}
+  locale: 'default',
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose([selectedDates]) {
+    if (selectedDates < Date.now()) {
+      Notiflix.Notify.failure('Please choose a date in the future');
+    } else {
+      dataStartBtn.disabled = false;
+      dateTimePicker.disabled = true;
+      date = selectedDates;
+    }
+  },
+};
 
 const flatPickr = flatpickr(dateTimePicker, options);
 
